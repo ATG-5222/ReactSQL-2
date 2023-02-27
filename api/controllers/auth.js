@@ -21,12 +21,20 @@ export const register = (req,res) => {
             return res.status(200).json("User has been created");
         })
     });
-}
+};
 
 export const login = (req,res) => {
-    
-}
+    //CHECK USER
+    const q = "SELECT * FROM user WHERE username = ?";
+    db.query(q,[req.body.username],(err,data)=>{
+        if(err) return res.json(err);
+        if(data.lenght===0) return res.status(404).json("User not found");
+        //CHECK PASSWORD
+        const isPasswordCorrect = bcrypt.compareSync(req.body.password,data[0]);
+        if(!isPasswordCorrect) return res.status(404).json("Wrong username or password");
+    })
+};
 
 export const logout = (req,res) => {
     
-}
+};
